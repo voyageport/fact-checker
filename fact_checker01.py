@@ -8,7 +8,7 @@ import sys
 OPENAI_API_KEY="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"
 
 def fact_check(question):
-    llm = OpenAI(temperature=0.7)
+    llm = OpenAI(temperature=0.7, openai_api_key=OPENAI_API_KEY) # pass openai_api_key here
     template = """{question}\n\n"""
     prompt_template = PromptTemplate(input_variables=["question"], template=template)
     question_chain = LLMChain(llm=llm, prompt=prompt_template)
@@ -21,7 +21,7 @@ def fact_check(question):
 
     template = """Here is a bullet point list of assertions:
     {assertions}
-    For each assertion, determine whether it is true or false. If it is false, explain why.\n\n"""
+    For each assertion, determine whether it is true or false using google search as a second and third source. If it is false, explain why.\n\n"""
     prompt_template = PromptTemplate(input_variables=["assertions"], template=template)
     fact_checker_chain = LLMChain(llm=llm, prompt=prompt_template)
 
@@ -38,7 +38,7 @@ if __name__=="__main__":
     if len(sys.argv) > 1:
         question = sys.argv[1]
     else:
-        question = "What type of mammal lays the biggest eggs?"
+        question = "how can La Paz be the world's highest official capital when it isn't the official capital of Bolivia?"
     print(question)
     answer = fact_check(question)
     print(answer)
